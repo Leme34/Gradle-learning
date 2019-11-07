@@ -1,0 +1,109 @@
+import org.apache.commons.lang3.StringUtils
+
+////print 'HelloWorld'
+//
+////println project.parent.childProjects
+//
+//// use closure configure task
+//task('HelloWorld', {
+//    println "HelloWorld Configuration phase..."
+//
+//    /**
+//     * Adds the given closure to the end of this task's action list.
+//     * The closure is passed this task as a parameter when executed.
+//     */
+//    doLast({
+//        println("HelloWorld Execution phase...")
+//    })
+//
+//})
+//
+//tasks.register("hello") {
+//    println "hello Configuration phase..."
+//    //	Add a task action to print to the console.
+//    doLast {
+//        println 'hello Execution phase...'
+//    }
+//}
+//
+////(0..<10).each { i ->
+////10.times { i ->
+//for (int i = 0; i < 10; i++) {
+//    task('task' + i) {
+//        def capturedI = i;
+//        doLast {
+////            println "Executing task ${i}"
+//            println "task${capturedI} Execution phase..."
+//        }
+//        if (i % 2 == 0) {
+//            dependsOn('hello')
+//        }
+//    }
+//}
+//
+//
+//// afterEvaluate：after Configuration phase,but before Execution phase
+//afterEvaluate {
+//    println 'after evaluate'
+//}
+//
+//
+///** ================================= 插件 ========================================= */
+//class MyFirstPlugin implements Plugin<Project> {
+//    /**
+//     * Project对象能调用apply是因为 Project implements PluginAware
+//     * @param target The target object
+//     */
+//    @Override
+//    void apply(Project target) {
+//        (0..<10).each { i ->
+//            {
+//                task('task' + i) {
+//                    def capturedI = i;
+//                    doLast {
+//                        println "task${capturedI} Execution phase..."
+//                    }
+//                    if (i % 2 == 0) {
+//                        dependsOn('hello')
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+//// 将会调用插件类 MyFirstPlugin 中的 apply 方法
+//apply([plugin: MyFirstPlugin])
+//
+//// .gradle script plugin
+//apply plugin: 'http://www.myserver.com/my-script'
+
+
+/** ================================= buildSrc插件 ========================================= */
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        // 把jar包放入 Configuration phase 的 classpath 中
+        classpath group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    }
+}
+
+// Binary Plugins
+apply plugin: 'java'
+// 导入java类插件，其中创建了10个任务
+apply plugin: MyPlugin
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // 把jar包放入 Execution phase 的 classpath 中
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+}
+
+if (StringUtils.isBlank("")){
+    println 'isBlank!!!'
+}
